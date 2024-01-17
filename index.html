@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Stats</title>
+</head>
+<body>
+
+    <h1>Football Stats</h1>
+
+    <!-- Radio buttons for stats -->
+    <form action="/process_data" method="post">
+        <label>
+            <input type="radio" name="statType" value="passing"> Passing
+        </label>
+        <label>
+            <input type="radio" name="statType" value="rushing"> Rushing
+        </label>
+        <label>
+            <input type="radio" name="statType" value="receiving"> Receiving
+        </label>
+
+        <br><br>
+
+        <!-- Dropdown for years -->
+        <label for="yearDropdown">Select Year:</label>
+        <select name="selectedYear"></select>
+
+        <!-- "GO!" button -->
+        <button type="submit">GO!</button>
+    </form>
+    
+    <script>
+        // set session variables 
+        const defaultSelectedYear = "2000";
+        const defaultSelectedStat = "passing";
+
+        // Check if values are already in localStorage, if not, use defaults
+        const storedSelectedYear = localStorage.getItem("sessionselectedyear") || defaultSelectedYear;
+        const storedSelectedStat = localStorage.getItem("sessionselectedstat") || defaultSelectedStat;
+
+        // Set default values in localStorage
+        localStorage.setItem("sessionselectedyear", storedSelectedYear);
+        localStorage.setItem("sessionselectedstat", storedSelectedStat);
+
+        // Set the initially selected values for radio button and dropdown
+        document.querySelector(`input[name="statType"][value="${storedSelectedStat}"]`).checked = true;
+
+        const dropdown = document.querySelector('select[name="selectedYear"]');
+        const currentYear = new Date().getFullYear();
+
+        for (let year = currentYear; year >= 1970; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            dropdown.appendChild(option);
+
+            // Set the initially selected value for the dropdown
+            if (year.toString() === storedSelectedYear) {
+                option.selected = true;
+            }
+        }
+
+        // Event listener to update localStorage on radio button change
+        document.querySelectorAll('input[name="statType"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                localStorage.setItem("sessionselectedstat", radio.value);
+            });
+        });
+
+        // Event listener to update localStorage on dropdown change
+        dropdown.addEventListener('change', () => {
+            localStorage.setItem("sessionselectedyear", dropdown.value);
+        });
+    </script>
+
+</body>
+</html>
